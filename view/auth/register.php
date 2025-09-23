@@ -1,8 +1,9 @@
+
 <?php
 session_start();
-require_once "../../controller/Main.php";
+require_once "../../controller/connection.db.php";
 
-$db = new db();
+//$db = new db();
 $message = [];
 
 $first_name = $middle_name = $last_name = $email = $role = $password = $confirm_password = $permanent_address = "";
@@ -11,7 +12,11 @@ if (isset($_POST['submit'])) {
     $first_name = trim($_POST['first_name']);
     $middle_name = trim($_POST['middle_name']);
     $last_name = trim($_POST['last_name']);
-    $permanent_address = trim($_POST['permanent_address']);
+   $region = trim($_POST['region']);
+    $province = trim($_POST['province']);
+    $municipality = trim($_POST['municipality']);
+    $barangay = trim($_POST['barangay']);
+
     $email = trim($_POST['email']);
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
@@ -24,8 +29,10 @@ if (isset($_POST['submit'])) {
     } elseif ($db->isEmailExists($email)) {
         $message[] = "Email is already registered.";
     } else {
-        $registered = $db->registerUser($first_name, $middle_name, $last_name, $email, $password, $role, $permanent_address);
-        if ($registered) {
+       // $registered = $db->registerUser($first_name, $middle_name, $last_name, $email, $password, $role, $permanent_address);
+       $registered = $db->registerUser($first_name, $middle_name, $last_name, $email, $password, $role, $region, $province, $municipality, $barangay);
+
+       if ($registered) {
             $_SESSION['message'] = 'Registration successful! You may now log in.';
             $_SESSION['message_type'] = 'success';
             header("Location: login.php");
@@ -37,19 +44,127 @@ if (isset($_POST['submit'])) {
 }
 ?>
 
-<?php include('../../assets/partials/partial/header.php'); ?>
 
-<main class="d-flex flex-column align-items-center justify-content-center min-vh-100">
-    <div class="card shadow-lg p-4" style="width: 100%; max-width: 600px;">
-        <div class="text-center mb-4">
-            <img src="../../assets/images/dmmmsu-logo.png" alt="Logo" class="img-fluid" style="max-height: 120px;">
-            <h5 class="mt-2 text-primary">Don Mariano Marcos Memorial State University</h5>
-            <h6 class="text-secondary">North La Union Campus</h6>
-            <h6 class="text-secondary">Don Mariano Marcos Memorial State University-North La Union Sericulture Research
-                and Development Institute - Document Tracking</h6>
-        </div>
+<!DOCTYPE html>
+<html lang="en">
 
-        <?php if (!empty($message)): ?>
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Register </title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="../../users/template/vendors/feather/feather.css">
+  <link rel="stylesheet" href="../../users/template/vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="../../users/template/vendors/ti-icons/css/themify-icons.css">
+  <link rel="stylesheet" href="../../users/template/vendors/typicons/typicons.css">
+  <link rel="stylesheet" href="../../users/template/vendors/simple-line-icons/css/simple-line-icons.css">
+  <link rel="stylesheet" href="../../users/template/vendors/css/vendor.bundle.base.css">
+  <!-- endinject -->
+  <!-- Plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="../../users/template/css/vertical-layout-light/style.css">
+  <!-- endinject -->
+   <link href="../../landing_assets/img/SRDI-Logo.jpg" rel="icon">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+   <!-- jQuery CDN -->
+  <script>
+  $(document).ready(function() {
+    // Load Provinces based on Region for Permanent Address
+    $('#region').change(function() {
+        var regCode = $(this).val();
+        $.ajax({
+            url: 'getProvince.php',
+            type: 'POST',
+            data: { regCode: regCode },
+            success: function(data) {
+                $('#province').html(data);
+                $('#municipality').html('<option value="">Select Municipality</option>');
+                $('#barangay').html('<option value="">Select Barangay</option>');
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Error:', textStatus, errorThrown);
+            }
+        });
+    });
+});
+ 
+
+
+$(document).ready(function() {
+    $('#province').change(function() {
+        var provCode = $(this).val();
+        console.log("Province changed:", provCode); // DEBUG
+
+        $.ajax({
+            url: 'getMunicipality.php',
+            type: 'POST',
+            data: { provCode: provCode },
+            success: function(data) {
+                console.log("AJAX Success:", data); // DEBUG
+                $('#municipality').html(data);
+                $('#barangay').html('<option value="">Select Barangay</option>');
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('AJAX Error:', textStatus, errorThrown);
+            }
+        });
+    });
+});
+
+// Load Barangays based on Municipality
+$(document).ready(function() {
+    $('#municipality').change(function() {
+        var citymunCode = $(this).val();
+        console.log("Selected Municipality:", citymunCode);
+
+        $.ajax({
+            url: 'getBarangay.php',
+            type: 'POST',
+            data: { citymunCode: citymunCode },
+            success: function(data) {
+                console.log("Response from getBarangay.php:", data);
+                $('#barangay').html(data);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log('Error:', textStatus, errorThrown);
+            }
+        });
+    });
+});
+
+  
+
+  </script>
+
+
+</head>
+
+<body>
+<div class="container-scroller l">
+  <div class="container-fluid page-body-wrapper full-page-wrapper">
+    <div class="content-wrapper d-flex align-items-center auth px-0">
+      <div class="row w-100 mx-0">
+        <div class="col-lg-8 mx-auto"> <!-- made wider container -->
+          <div class="auth-form-light text-left py-5 px-4 px-sm-5 rounded-3 shadow-lg">
+
+            <!-- Logo -->
+            <div class="brand-logo d-flex justify-content-center mb-4">
+              <img src="../..//users/template/images/auth/SRDI-Logo.jpg" alt="logo">
+            </div>
+
+            <!-- Header -->
+            <h3 class="fw-bold login-header text-primary  text-center">
+SRDI Research Tracking System
+            </h3>
+            <h6 class="fw-light text-center"> Start your research journey - Create your account!🚀</h6>
+
+
+                  <?php if (!empty($message)): ?>
             <div class="alert alert-danger text-center">
                 <?php foreach ($message as $msg): ?>
                     <p><?php echo htmlspecialchars($msg); ?></p>
@@ -57,59 +172,140 @@ if (isset($_POST['submit'])) {
             </div>
         <?php endif; ?>
 
-        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-            <div class="mb-3">
-                <label class="form-label">First Name</label>
-                <input type="text" name="first_name" required class="form-control"
-                    value="<?php echo htmlspecialchars($first_name); ?>">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Middle Name</label>
-                <input type="text" name="middle_name" class="form-control"
-                    value="<?php echo htmlspecialchars($middle_name); ?>">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Last Name</label>
-                <input type="text" name="last_name" required class="form-control"
-                    value="<?php echo htmlspecialchars($last_name); ?>">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Permanent Address</label>
-                <input type="text" name="permanent_address" required class="form-control"
-                    value="<?php echo htmlspecialchars($permanent_address); ?>">
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Email Address</label>
-                <input type="email" name="email" required class="form-control"
-                    value="<?php echo htmlspecialchars($email); ?>">
-            </div>
 
-            <div class="mb-3">
-                <label class="form-label">Password</label>
+            <!-- Form -->
+            <form class="pt-3">
+              
+              <!-- Name Row -->
+                  <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+   <div class="row">
+  <div class="col-md-4 mb-3">
+    <label class="text-dark mb-0 ">First Name</label>
+<div class="input-group">
+  <span class="input-group-text bg-secondary text-primary">
+    <i class="mdi mdi-account"></i>
+  </span>
+  <input type="text" class="form-control" name="first_name"  placeholder="Enter first name" value="<?php echo htmlspecialchars($first_name); ?>">
+</div>
+
+  </div>
+  <div class="col-md-4 mb-3 ">
+    <label class="text-dark mb-0 ">Middle Name</label>
+
+  <input type="text" class="form-control " placeholder="Enter middle name"  name="middle_name"  value="<?php echo htmlspecialchars($middle_name); ?>">
+
+  </div>
+  <div class="col-md-4 mb-3">
+    <label class="text-dark mb-0 ">Last Name</label>
+
+  <input type="text" class="form-control" placeholder="Enter last name" name="last_name"  value="<?php echo htmlspecialchars($last_name); ?>">
+
+  </div>
+</div>
+
+
+              <!-- Address Row -->
+              <div class="row">
+                <div class="col-md-3 mb-3">
+                  <label class="text-dark mb-0 ">Region</label>
                 <div class="input-group">
-                    <input type="password" name="password" id="password" required class="form-control">
-                    <button type="button" class="input-group-text" onclick="togglePassword('password', 'eye-icon')">
-                        <i id="eye-icon" class="fas fa-eye"></i>
-                    </button>
-                </div>
-            </div>
+  <span class="input-group-text bg-secondary text-primary">
+    <i class="mdi mdi-map-marker"></i>
+  </span>
+<select id="region" name="region" required class="form-control" placeholder="Region">
+    <option value="" disabled selected>Select Region</option>
+    <?php
+    include '../../controller/connection.db.php';
+    $result = mysqli_query($conn, "SELECT * FROM refregion ORDER BY regDesc ASC");
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            echo "<option value='".$row['regCode']."'>".$row['regDesc']."</option>";
+        }
+    } else {
+        echo "<option disabled>Error loading regions</option>";
+    }
+    ?>
+</select>
 
-            <div class="mb-3">
-                <label class="form-label">Confirm Password</label>
+
+</div>
+
+                </div>
+                <div class="col-md-3 mb-3">
+                  <label class="text-dark mb-0 ">Province</label>
+                      <select id="province" name="province" required class="form-control form-control rounded-3" placeholder="Province" >
+            <option value="" disabled selected>Select Province</option>
+        </select>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                  <label class="text-dark mb-0 ">Municipality</label>
+                      <select id="municipality" name="municipality" class="form-control form-control rounded-3" placeholder="Municipality" >
+            <option value="" disabled selected>Select Municipality</option>
+        </select>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                  <label class="text-dark mb-0 ">Barangay</label>
+                <select id="barangay" name="barangay"  class="form-control form-control rounded-3" placeholder="Barangay">
+            <option value="" disabled selected>Select Barangay</option>
+        </select>
+                  </div>
+              </div>
+
+              <!-- Email -->
+              <div class="form-group mb-3">
+                <label class="text-dark mb-0 ">Email Address</label>
+               <div class="input-group">
+  <span class="input-group-text bg-secondary text-primary">
+    <i class="mdi mdi-email"></i>
+  </span>
+  <input type="email" class="form-control" placeholder="Enter your email" name="email" value="<?php echo htmlspecialchars($email); ?>">
+</div>
+
+              </div>
+
+            <!-- Password Row -->
+
+<div class="row">
+  <!-- Password -->
+  <div class="col-md-6 mb-3 position-relative">
+    <label class="text-dark mb-0 ">Password</label>
+    
+<div class="input-group position-relative">
+  <span class="input-group-text bg-secondary text-primary">
+    <i class="mdi mdi-lock"></i>
+  </span>
+  <input type="password" class="form-control" id="password" placeholder="Enter password" name="password">
+
+
+</div>
+
+
+  </div>
+
+  <!-- Confirm Password -->
+  <div class="col-md-6 mb-3 position-relative">
+    <label class="text-dark mb-0 ">Confirm Password</label>
+    <input type="text" class="form-control rounded-3" id="confirmPassword" placeholder="Confirm password" name="confirm_password">
+    <span class="toggle-password" toggle="#confirmPassword">
+      <i class="mdi mdi-eye"></i>
+    </span>
+  </div>
+</div>
+
+
+
+              <!-- Role Dropdown -->
+              <div class="form-group mb-3">
+                <label class="text-dark mb-0 ">Role</label>
                 <div class="input-group">
-                    <input type="password" name="confirm_password" id="confirm_password" required class="form-control">
-                    <button type="button" class="input-group-text"
-                        onclick="togglePassword('confirm_password', 'eye-icon-confirm')">
-                        <i id="eye-icon-confirm" class="fas fa-eye"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Role</label>
-                <select name="role" class="form-select" required>
-                    <option value="">-- Select Role --</option>
-                    <?php
+  <span class="input-group-text bg-secondary text-primary">
+    <i class="mdi mdi-account-box"></i>
+  </span>
+  <select class="form-control" name="role" >
+    <option selected disabled>Select your role</option>
+  <?php
                     $roles = [
                         'researcher',
                         'researcher_division_head',
@@ -121,31 +317,66 @@ if (isset($_POST['submit'])) {
                         echo '<option value="' . $r . '"' . ($role === $r ? ' selected' : '') . '>' . ucwords(str_replace('_', ' ', $r)) . '</option>';
                     }
                     ?>
-                </select>
-            </div>
-            <button type="submit" name="submit" class="btn btn-primary w-100">Register</button>
-        </form>
+  </select>
+</div>
 
-        <div class="text-center mt-3">
-            <a href="login.php" class="small">Already have an account? Login here</a>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="mt-3">
+                <button  type="submit" name="submit" class="btn btn-lg w-100 font-weight-medium auth-form-btn" >REGISTER</button>
+              </div>
+
+                    </form>
+              <!-- Back to login -->
+              <div class="text-center mt-4 fw-light">
+                Already have an account? 
+                <a href="../../view/auth/login.php" class="text-decoration-none reg-text">Log in</a>
+              </div>
+
+            </form>
+          </div>
         </div>
+      </div>
     </div>
-</main>
+  </div>
+</div>
+
+  <!-- container-scroller -->
+  <!-- plugins:js -->
+  <script src="../../users/template/vendors/js/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page -->
+  <script src="../../users/template/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
+  <!-- End plugin js for this page -->
+  <!-- inject:js -->
+  <script src="../../users/template/js/off-canvas.js"></script>
+  <script src="../../users/template/js/hoverable-collapse.js"></script>
+  <script src="../../users/template/js/template.js"></script>
+  <script src="../../users/template/js/settings.js"></script>
+  <script src="../..//users/template/js/todolist.js"></script>
+  
+  <!-- endinject -->
 
 <script>
-    function togglePassword(passwordId, iconId) {
-        const passwordField = document.getElementById(passwordId);
-        const icon = document.getElementById(iconId);
-        if (passwordField.type === 'password') {
-            passwordField.type = 'text';
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
-        } else {
-            passwordField.type = 'password';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
-        }
-    }
-</script>
+  document.querySelectorAll('.toggle-password').forEach(item => {
+    item.addEventListener('click', function() {
+      let input = document.querySelector(this.getAttribute('toggle'));
+      let icon = this.querySelector('i');
+      if (input.getAttribute('type') === 'password') {
+        input.setAttribute('type', 'text');
+        icon.classList.remove('mdi-eye-off');
+        icon.classList.add('mdi-eye');
+      } else {
+        input.setAttribute('type', 'password');
+        icon.classList.remove('mdi-eye');
+        icon.classList.add('mdi-eye-off');
+      }
+    });
+  });
+</script> 
 
-<?php include('../../assets/partials/partial/footer.php'); ?>
+
+</body>
+
+</html>

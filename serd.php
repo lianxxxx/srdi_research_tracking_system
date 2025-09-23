@@ -9,7 +9,8 @@
   <meta name="keywords" content="">
 
   <!-- Favicons -->
-  <link href="/landing_assets/img/SRDI-Logo.jpg" rel="icon">
+  <link href="./landing_assets/img/SRDI-Logo.jpg" rel="icon">
+
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -17,14 +18,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
   <!-- Vendor CSS Files -->
-  <link href="/landing_assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="/landing_assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="/landing_assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="/landing_assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="/landing_assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+  <link href="./landing_assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="./landing_assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="./landing_assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="./landing_assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="./landing_assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
   <!-- Main CSS File -->
-  <link href="/landing_assets/css/main.css" rel="stylesheet">
+  <link href="./landing_assets/css/main.css" rel="stylesheet">
+
+  <link href="./landing_assets/css/main.css" rel="stylesheet">
 
   <!-- =======================================================
   * Template Name: iLanding
@@ -104,17 +107,17 @@ srdi@dmmmsu.edu.ph</a></p>
             <img src="landing_assets/img/serd.png" alt="" class="img-fluid services-img">
             <h3>The Socio- economics Research and Development </h3>
             <p>
-         The Post-Cocoon R&D Program develops high-quality silk products and innovative technologies to enhance the sericulture industry.
+The Socio-Economics R&D unit serves as the knowledge hub for data, analysis, and insights essential to the growth and sustainability of the sericulture industry.
                 </p>
             <ul>
-              <li><i class="bi bi-check-circle"></i> <span>Produce quality silk and silk allied products with market advantage</span></li>
-              <li><i class="bi bi-check-circle"></i> <span>Develop new weaving designs and silk-based fashion products</span></li>
-              <li><i class="bi bi-check-circle"></i> <span>Improve cocoon, raw silk, and wet silk processing, weaving, and finishing</span></li>
-                            <li><i class="bi bi-check-circle"></i> <span>Develop and enhance sericulture tools and equipment for efficiency</span></li>
+              <li><i class="bi bi-check-circle"></i> <span>Gathers benchmark information and databases</span></li>
+              <li><i class="bi bi-check-circle"></i> <span>Conducts marketing, rural sociology, and economic studies</span></li>
+              <li><i class="bi bi-check-circle"></i> <span>Provides data for policy formulation and decision-making</span></li>
+                            <li><i class="bi bi-check-circle"></i> <span>Updates cost-and-returns analysis of sericulture products</span></li>
             </ul>
           
             <p>
-           The program focuses on producing silk and allied products that are competitive internationally. It develops innovative weaving designs such as suk-suk patterns and creates various silk products and by-products, including raw silk, thrown silk, and dupion silk for fabrics and fashion accessories. The main activities cover cocoon processing, raw and wet silk processing, weaving, and finishing. Additionally, the institute designs and improves sericulture tools and equipment—including leaf cutting machines, printing machines, solar dryers, handlooms, warping machines, and epprovettes—to increase efficiency and effectiveness in silk production.
+The Socio-Economics Research and Development (R&D) unit plays a vital role in advancing the sericulture industry in the country. It collects and manages benchmark information, databases, and survey data to provide an evidence-based foundation for planning and policy-making. Through its studies in marketing, applied rural sociology, and economics, the unit supports the creation of strategies that enhance industry competitiveness and sustainability. In addition, it assists students and researchers by facilitating surveys related to sericulture, ensuring knowledge sharing and academic support. By regularly updating the cost-and-returns analysis of all sericulture products, the unit provides stakeholders with up-to-date insights crucial for investment, production, and policy decisions.
             </p>
           </div>
 
@@ -186,15 +189,15 @@ srdi@dmmmsu.edu.ph</a></p>
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
-  <script src="/landing_assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="/landing_assets/vendor/php-email-form/validate.js"></script>
-  <script src="/landing_assets/vendor/aos/aos.js"></script>
-  <script src="/landing_assets/vendor/glightbox/js/glightbox.min.js"></script>
-  <script src="/landing_assets/vendor/swiper/swiper-bundle.min.js"></script>
-  <script src="/landing_assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="./landing_assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="./landing_assets/vendor/php-email-form/validate.js"></script>
+  <script src="./landing_assets/vendor/aos/aos.js"></script>
+  <script src="./landing_assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="./landing_assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="./landing_assets/vendor/purecounter/purecounter_vanilla.js"></script>
 
   <!-- Main JS File -->
-  <script src="/landing_assets/js/main.js"></script>
+  <script src="./landing_assets/js/main.js"></script>
 
 
 </body>
