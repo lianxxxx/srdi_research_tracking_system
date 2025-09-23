@@ -9,7 +9,7 @@ class db
 
     public function __construct()
     {
-        $this->con = mysqli_connect('127.0.0.1', 'root', '', 'dmmmsu_srdi', 3308);
+        $this->con = mysqli_connect('localhost', 'root', '', 'srdi');
         if (!$this->con) {
             die("Database connection failed: " . mysqli_connect_error());
         }
