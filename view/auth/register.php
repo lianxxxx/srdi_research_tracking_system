@@ -1,48 +1,50 @@
-
 <?php
-session_start();
-require_once "../../controller/connection.db.php";
+// connect to DB
+include '../../controller/connection.db.php';
 
-//$db = new db();
-$message = [];
+// initialize variables to avoid "undefined variable" warnings
+$first_name = $middle_name = $last_name = $email = $role = "";
+$region = $province = $municipality = $barangay = "";
+$password = $confirm_password = "";
 
-$first_name = $middle_name = $last_name = $email = $role = $password = $confirm_password = $permanent_address = "";
+// process form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit'])) {
+    // collect input values safely
+    $first_name     = mysqli_real_escape_string($conn, $_POST['first_name']);
+    $middle_name    = mysqli_real_escape_string($conn, $_POST['middle_name']);
+    $last_name      = mysqli_real_escape_string($conn, $_POST['last_name']);
+    $region         = mysqli_real_escape_string($conn, $_POST['region']);
+    $province       = mysqli_real_escape_string($conn, $_POST['province']);
+    $municipality   = mysqli_real_escape_string($conn, $_POST['municipality']);
+    $barangay       = mysqli_real_escape_string($conn, $_POST['barangay']);
+    $email          = mysqli_real_escape_string($conn, $_POST['email']);
+    $password       = mysqli_real_escape_string($conn, $_POST['password']);
+    $confirm_password = mysqli_real_escape_string($conn, $_POST['confirm_password']);
+    $role           = mysqli_real_escape_string($conn, $_POST['role']);
 
-if (isset($_POST['submit'])) {
-    $first_name = trim($_POST['first_name']);
-    $middle_name = trim($_POST['middle_name']);
-    $last_name = trim($_POST['last_name']);
-   $region = trim($_POST['region']);
-    $province = trim($_POST['province']);
-    $municipality = trim($_POST['municipality']);
-    $barangay = trim($_POST['barangay']);
-
-    $email = trim($_POST['email']);
-    $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
-    $role = $_POST['role'];
-
-    if (!$first_name || !$last_name || !$email || !$password || !$confirm_password || !$role || !$permanent_address) {
-        $message[] = "Please fill in all required fields.";
-    } elseif ($password !== $confirm_password) {
-        $message[] = "Passwords do not match.";
-    } elseif ($db->isEmailExists($email)) {
-        $message[] = "Email is already registered.";
+    // validate password
+    if ($password !== $confirm_password) {
+        echo "<script>alert('Passwords do not match!');</script>";
     } else {
-       // $registered = $db->registerUser($first_name, $middle_name, $last_name, $email, $password, $role, $permanent_address);
-       $registered = $db->registerUser($first_name, $middle_name, $last_name, $email, $password, $role, $region, $province, $municipality, $barangay);
+        // hash password
+        $hashed_pass = password_hash($password, PASSWORD_DEFAULT);
 
-       if ($registered) {
-            $_SESSION['message'] = 'Registration successful! You may now log in.';
-            $_SESSION['message_type'] = 'success';
-            header("Location: login.php");
+        // insert into DB
+        $sql = "INSERT INTO employees
+                (first_name, middle_name, last_name, region, province, municipality, barangay, email, password, role) 
+                VALUES 
+                ('$first_name', '$middle_name', '$last_name', '$region', '$province', '$municipality', '$barangay', '$email', '$hashed_pass', '$role')";
+
+        if (mysqli_query($conn, $sql)) {
+            echo "<script>alert('Registration successful!'); window.location.href='login.php';</script>";
             exit;
         } else {
-            $message[] = "Registration failed. Please try again.";
+            echo "Error: " . mysqli_error($conn);
         }
     }
 }
-?>
+?>  
+
 
 
 <!DOCTYPE html>
@@ -173,11 +175,9 @@ SRDI Research Tracking System
         <?php endif; ?>
 
 
-            <!-- Form -->
-            <form class="pt-3">
-              
+         
               <!-- Name Row -->
-                  <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                  <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" class="pt-3">
    <div class="row">
   <div class="col-md-4 mb-3">
     <label class="text-dark mb-0 ">First Name</label>
