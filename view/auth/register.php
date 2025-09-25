@@ -174,8 +174,6 @@ SRDI Research Tracking System
             </div>
         <?php endif; ?>
 
-
-         
               <!-- Name Row -->
                   <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post" class="pt-3">
    <div class="row">
@@ -306,6 +304,7 @@ SRDI Research Tracking System
   <select class="form-control" name="role" >
     <option selected disabled>Select your role</option>
   <?php
+
                     $roles = [
                         'researcher',
                         'researcher_division_head',
@@ -317,6 +316,7 @@ SRDI Research Tracking System
                         echo '<option value="' . $r . '"' . ($role === $r ? ' selected' : '') . '>' . ucwords(str_replace('_', ' ', $r)) . '</option>';
                     }
                     ?>
+
   </select>
 </div>
 
@@ -334,7 +334,6 @@ SRDI Research Tracking System
                 <a href="../../view/auth/login.php" class="text-decoration-none reg-text">Log in</a>
               </div>
 
-            </form>
           </div>
         </div>
       </div>
@@ -380,3 +379,7 @@ SRDI Research Tracking System
 </body>
 
 </html>
+
+              
+
+

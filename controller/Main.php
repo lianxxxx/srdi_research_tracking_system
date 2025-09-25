@@ -10,6 +10,8 @@ class db
     public function __construct()
     {
         $this->con = mysqli_connect('localhost', 'root', '', 'srdi');
+
+
         if (!$this->con) {
             die("Database connection failed: " . mysqli_connect_error());
         }
